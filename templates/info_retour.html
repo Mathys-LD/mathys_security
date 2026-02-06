@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/stylegestionstation.css') }}"/>
+    <title>Résultat de la requête</title>
+</head>
+<body>
+
+<h1>Résultat de l'opération</h1>
+
+<p>
+    {{ res }}
+</p>
+
+<p>
+    <a href="/ajouter_utilisateur">Retour à l'interface gestionnaire</a>
+</p>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Système de contrôle d'accès</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/stylegestionstation.css') }}">
+</head>
+<body>
+
+<header>
+    <h1 class="titre">Interface gestionnaire – Ajouter un utilisateur</h1>
+</header>
+
+<div class="container">
+
+    <form action="{{ url_for('ajouter_utilisateur')}}" method="post" class="formulaire1">
+        <fieldset>
+            <legend>Nouveau Utilisateur</legend>
+
+            <label for="prenom">Prénom:</label>
+            <input type="text" id="prenom" name="prenom" required><br><br>
+
+            <label for="nom">Nom:</label>
+            <input type="text" id="nom" name="nom" required><br><br>
+
+            <label for="code_carte">Code carte :</label>
+            <input type="text" id="code_carte" name="code_carte" required><br><br>
+
+            <label for="activation_carte">Carte activée :</label>
+            <select id="activation_carte" name="activation_carte">
+              <option value="1">Oui</option>
+              <option value="0">Non</option>
+            </select><br><br>
+
+            <label for="acces_bureau">Accès zone Bureaux:</label>
+            <select id="acces_bureau" name="acces_bureau">
+              <option value="1">Oui</option>
+              <option value="0">Non</option>
+            </select><br><br>
+
+            <label for="acces_stock">Accès zone Stock :</label>
+            <select id="acces_stock" name="acces_stock">
+              <option value="1">Oui</option>
+              <option value="0">Non</option>
+            </select><br><br>
+
+            <label for="acces_info">Accès zone Informatique:</label>
+            <select id="acces_info" name="acces_info">
+              <option value="1">Oui</option>
+              <option value="0">Non</option>
+            </select><br><br>
+
+            <label for="acces_technique">Accès zone Technique :</label>
+            <select id="acces_technique" name="acces_technique">
+              <option value="1">Oui</option>
+              <option value="0">Non</option>
+            </select><br><br>
+
+             <div>
+                <input type="submit" value="Ajouter">
+             </div>
+        </fieldset>
+
+    </form>
+
+</div>
+
+<footer>
+   © 2026 BTS CIEL - Contrôle d'accès
+</footer>
+
+</body>
+</html>

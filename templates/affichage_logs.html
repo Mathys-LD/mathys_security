@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	 <link rel="stylesheet" href="{{ url_for('static', filename='css/stylegestionstation.css') }}"/>
+	<title> Système de contrôle d'accès</title>
+</head>
+	<body>
+		<h1> Interface de gestion - Logs</h1>
+
+        <table>
+                <thead>
+                    <tr>
+                        <th> date </th>
+                        <th> id_User </th>
+                        <th> id_zone </th>
+                        <th> Autorisation </th>
+                     </tr>
+                </thead>
+                <tbody>
+                    {% for ligne in logs %}
+                        <tr>
+                            <td>  {{ ligne['horodatage'] }} </td>
+                            <td>  {{ ligne['id_user'] }} </td>
+                            <td>  {{ ligne['id_zone'] }}</td>
+                            <td>  {{ ligne['acces_autorise'] }} </td>
+
+                        </tr>
+                    {% endfor %}
+                </tbody>
+        </table>
+
+	</body>
+</html>

@@ -81,18 +81,20 @@ def ajouter_utilisateur():
 @app.route("/demande_autorisation", methods=["POST"])
 def demande_authorisation():
     zones = {1:"z_bureaux", 2:"z_stock", 3:"z_info", 4:"z_technique"}
-    uidBadge = str(request.json["uidBadge"])
-    zone = str(zones[request.json["zone"]])
-    print(uidBadge, zone)
+    uid = request.form['uid']
+    zone = zones[int(request.form['zone'])]
     co = get_connection()
     curseur = co.cursor()
     requete = f"SELECT nom, {zone} FROM users WHERE code_carte=%s"
-    values = (uidBadge)
+    values = (uid)
     curseur.execute(requete, values)
     autorisation = curseur.fetchall()
     curseur.close()
     co.close()
+    print(uid, zone)
     return autorisation
+
+
 
 if __name__ == '__main__':
     app.run()

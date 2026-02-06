@@ -90,7 +90,6 @@ def demande_authorisation():
     values = (uidBadge)
     curseur.execute(requete, values)
     autorisation = curseur.fetchall()
-    print(autorisation)
     curseur.close()
     co.close()
     return autorisation

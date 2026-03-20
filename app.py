@@ -1,5 +1,4 @@
-import json
-
+import pymysql
 from flask import Flask, render_template ,request
 from database import get_connection
 
@@ -10,7 +9,7 @@ def index():
     return render_template('index.html')
 
 #*****************************************************************************************
-@app.route("/test")
+@app.route("/testBdd")
 def accueil():
     co = get_connection()
     if co:
@@ -36,7 +35,7 @@ def affichage_logs():
 
 @app.route("/delete")
 def delete():
-    id_user=0
+    id_user=1
     co = get_connection()
     curseur = co.cursor()
     requete = "DELETE FROM users WHERE id = %s"
@@ -79,23 +78,41 @@ def ajouter_utilisateur():
     return render_template("ajouter_utilisateur.html")
 
 @app.route("/demande_autorisation", methods=["POST"])
-def demande_authorisation():
+def demande_autorisation():
+    #print("Headers:", request.headers)
+    #print("Raw data:", request.get_data())
+    #print("Form:", request.form)
     zones = {1:"z_bureaux", 2:"z_stock", 3:"z_info", 4:"z_technique"}
     uid = request.form['uid']
-    zone = zones[int(request.form['zone'])]
+    zone = request.form['zone']
+    nomZone=zones[int(zone)]
+    print("******Parametres reçus du lecteur de badge: zone=",zone,"uid=",uid,"******")
+    print("Nom de la zone d'implantation du lecteur:",nomZone)
     co = get_connection()
-    curseur = co.cursor()
-    requete = f"SELECT nom, {zone} FROM users WHERE code_carte=%s"
-    values = (uid)
-    curseur.execute(requete, values)
-    autorisation = curseur.fetchall()
-    curseur.close()
-    co.close()
-    print(uid, zone)
-    return autorisation
+    if co:
+        curseur = co.cursor()
+        requete = f"SELECT nom, {nomZone} FROM users WHERE code_carte=%s"
+        curseur.execute(requete, uid)
+        reponse = curseur.fetchone()
+        print("Reponse de la Bdd:",reponse)
+        curseur.close()
+        co.close()
 
+        if reponse==None:
+            return "inconnu"
+        reponseJson = {"nom": reponse['nom'], "zone": zone, "autorisation": reponse[nomZone]}
+        print(reponseJson)
+        return reponseJson
 
+    else:
+        return "Erreur Bdd"
+@app.route("/update", methods=["POST"])
+def update():
+    global last_measure
+    data_requetePost = request.data.decode("utf-8")
+    print("Nouvelle demande:", data_requetePost)
+    return "OK"
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host="0.0.0.0", port=5000)
 

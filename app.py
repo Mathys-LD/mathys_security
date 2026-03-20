@@ -111,7 +111,8 @@ def demande_autorisation():
             print(curseur.rowcount, curseur.fetchall())
             curseur.close()
             co.close()
-            return "Accès Refusé"
+            reponseJson = {"nom": uid, "zone": zone, "autorisation": 0}
+            return reponseJson
         curseur.execute(requete, (auth, reponse['code_carte'], zone))
         co.commit()
         print(curseur.rowcount, curseur.fetchall())

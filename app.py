@@ -82,25 +82,43 @@ def demande_autorisation():
     #print("Headers:", request.headers)
     #print("Raw data:", request.get_data())
     #print("Form:", request.form)
-    zones = {1:"z_bureaux", 2:"z_stock", 3:"z_info", 4:"z_technique"}
     uid = request.form['uid']
     zone = request.form['zone']
-    nomZone=zones[int(zone)]
-    print("******Parametres reçus du lecteur de badge: zone=",zone,"uid=",uid,"******")
-    print("Nom de la zone d'implantation du lecteur:",nomZone)
+    auth=1
+    print("****** Parametres reçus du lecteur de badge: zone=",zone,"uid=",uid,"******")
     co = get_connection()
     if co:
         curseur = co.cursor()
-        requete = f"SELECT nom, {nomZone} FROM users WHERE code_carte=%s"
-        curseur.execute(requete, uid)
+        requete = (f"SELECT * FROM `users_zones` "
+                   f"INNER JOIN users ON users_zones.id_user=users.id "
+                   f"WHERE users.code_carte=%s AND users_zones.id_zone=%s")
+        curseur.execute(requete, (uid, zone))
         reponse = curseur.fetchone()
-        print("Reponse de la Bdd:",reponse)
+        print("Reponse de la Bdd:", reponse)
+        requete = (f"INSERT INTO logs_acces (id_user, id_zone, acces_autorise) "
+                   f"SELECT users.id, users_zones.id_zone, %s FROM users "
+                   f"INNER JOIN users_zones ON users.id=users_zones.id_user "
+                   f"WHERE users.code_carte=%s AND users_zones.id_zone=%s")
+        if reponse==None:
+            auth=0
+            requete = (f"INSERT INTO logs_acces (id_user, id_zone, acces_autorise) "
+                       f"SELECT users.id, %s, %s FROM users "
+                       f"WHERE users.code_carte=%s "
+                       f"LIMIT 1")
+            curseur.execute(requete, (zone, auth, uid))
+            co.commit()
+            print(curseur.rowcount, curseur.fetchall())
+            curseur.close()
+            co.close()
+            return "Accès Refusé"
+        curseur.execute(requete, (auth, reponse['code_carte'], zone))
+        co.commit()
+        print(curseur.rowcount, curseur.fetchall())
         curseur.close()
         co.close()
 
-        if reponse==None:
-            return "inconnu"
-        reponseJson = {"nom": reponse['nom'], "zone": zone, "autorisation": reponse[nomZone]}
+
+        reponseJson = {"nom": reponse['nom'], "zone": zone, "autorisation":1}
         print(reponseJson)
         return reponseJson
 
@@ -115,4 +133,3 @@ def update():
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)
-

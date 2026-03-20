@@ -6,7 +6,19 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    requete=("SELECT * FROM logs_acces "
+             "WHERE TIMEDIFF(NOW(), horodatage) < '24:00:00' AND acces_autorise=0 "
+             "ORDER BY horodatage DESC")
+    co = get_connection()
+    curseur = co.cursor()
+    curseur.execute(requete)
+    logs = curseur.fetchall()
+    nbrLogs = curseur.rowcount
+    curseur.close()
+    co.close()
+    print("NBR ACCES 24H: ", nbrLogs)
+    print(logs)
+    return render_template('index.html', logs=logs, nbrLogs=nbrLogs)
 
 #*****************************************************************************************
 @app.route("/testBdd")

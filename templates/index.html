@@ -1,18 +1,52 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Système de contrôle d'accès</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/stylegestionstation.css') }}"/>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Système de contrôle d'accès</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/stylegestionstation.css') }}"/>
 </head>
 <body>
-<header>
-  <h1 class="titre">Système de contrôle d'accès</h1>
-    <img src="{{url_for('static', filename='images/RFID.jpg') }}" alt="Bienvenue">
-  <footer>
-  &copy; 2026 BTS CIEL -    © 2026 BTS CIEL - Contrôle d'accès
-</footer>
+
+    <header>
+        <h1 class="titre">Système de contrôle d'accès</h1>
+    </header>
+
+    <div class="dashboard-container">
+
+        <div class="left-panel">
+            <img src="{{url_for('static', filename='images/RFID.jpg') }}" alt="RFID Card">
+
+            <div class="alerte-box">
+                <h2>{{ nbrLogs }}</h2>
+                <h3>Accès Refusés - 24H</h3>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>ID User</th>
+                    <th>ID Zone</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ligne in logs %}
+                    <tr>
+                        <td>{{ ligne['horodatage'] }}</td>
+                        <td>{{ ligne['id_user'] }}</td>
+                        <td>{{ ligne['id_zone'] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+    <footer>
+        &copy; 2026 BTS CIEL - Contrôle d'accès
+    </footer>
+
 </body>
 </html>

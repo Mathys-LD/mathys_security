@@ -173,6 +173,10 @@ th, td {
 
 h2 {
 	text-align: center;
+	width: 20%;
+	height: 150%;
+	background-color: red;
+	margin-left: 40%;
 }
 
 

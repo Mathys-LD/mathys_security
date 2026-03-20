@@ -95,16 +95,17 @@ def demande_autorisation():
         curseur.execute(requete, (uid, zone))
         reponse = curseur.fetchone()
         print("Reponse de la Bdd:", reponse)
-        requete = (f"INSERT INTO logs_acces (id_user, id_zone, acces_autorise) "
-                   f"SELECT users.id, users_zones.id_zone, %s FROM users "
-                   f"INNER JOIN users_zones ON users.id=users_zones.id_user "
-                   f"WHERE users.code_carte=%s AND users_zones.id_zone=%s")
+        requete = ("INSERT INTO logs_acces (id_user, id_zone, acces_autorise) "
+                   "SELECT users.id, users_zones.id_zone, %s FROM users "
+                   "INNER JOIN users_zones ON users.id=users_zones.id_user "
+                   "WHERE users.code_carte=%s AND users_zones.id_zone=%s")
+
         if reponse==None:
             auth=0
-            requete = (f"INSERT INTO logs_acces (id_user, id_zone, acces_autorise) "
-                       f"SELECT users.id, %s, %s FROM users "
-                       f"WHERE users.code_carte=%s "
-                       f"LIMIT 1")
+            requete = ("INSERT INTO logs_acces (id_user, id_zone, acces_autorise) "
+                       "SELECT users.id, %s, %s FROM users "
+                       "WHERE users.code_carte=%s "
+                       "LIMIT 1")
             curseur.execute(requete, (zone, auth, uid))
             co.commit()
             print(curseur.rowcount, curseur.fetchall())

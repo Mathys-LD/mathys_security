@@ -7,6 +7,7 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     requete=("SELECT * FROM logs_acces "
+             "INNER JOIN zones ON logs_acces.id_zone = zones.id "
              "WHERE TIMEDIFF(NOW(), horodatage) < '24:00:00' AND acces_autorise=0 "
              "ORDER BY horodatage DESC "
              "LIMIT 10")
@@ -15,11 +16,21 @@ def index():
     curseur.execute(requete)
     logs = curseur.fetchall()
     nbrLogs = curseur.rowcount
+    requete = ("SELECT COUNT(nom), nom FROM logs_acces "
+               "INNER JOIN zones ON logs_acces.id_zone = zones.id "
+               
+               "WHERE TIMEDIFF(NOW(), horodatage) < '24:00:00' AND acces_autorise=0 "
+               "GROUP BY zones.nom "
+               "LIMIT 10 "
+               )
+    curseur.execute(requete)
+    zonetab=curseur.fetchall()
+    print(zonetab)
     curseur.close()
     co.close()
     print("NBR ACCES 24H: ", nbrLogs)
     print(logs)
-    return render_template('index.html', logs=logs, nbrLogs=nbrLogs)
+    return render_template('index.html', logs=logs, nbrLogs=nbrLogs, zonetab=zonetab)
 
 #*****************************************************************************************
 @app.route("/testBdd")

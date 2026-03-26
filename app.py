@@ -8,7 +8,8 @@ app = Flask(__name__)
 def index():
     requete=("SELECT * FROM logs_acces "
              "WHERE TIMEDIFF(NOW(), horodatage) < '24:00:00' AND acces_autorise=0 "
-             "ORDER BY horodatage DESC")
+             "ORDER BY horodatage DESC "
+             "LIMIT 10")
     co = get_connection()
     curseur = co.cursor()
     curseur.execute(requete)

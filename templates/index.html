@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Système de contrôle d'accès</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/stylegestionstation.css') }}"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rationale&display=swap" rel="stylesheet">
+    <meta http-equiv="refresh" content="10">
 </head>
 <body>
 
@@ -15,11 +19,10 @@
     <div class="dashboard-container">
 
         <div class="left-panel">
-            <img src="{{url_for('static', filename='images/RFID.jpg') }}" alt="RFID Card">
 
             <div class="alerte-box">
-                <h2>{{ nbrLogs }}</h2>
-                <h3>Accès Refusés - 24H</h3>
+                {{ nbrLogs }}<br>
+                Accès Refusés - 24H
             </div>
         </div>
 
